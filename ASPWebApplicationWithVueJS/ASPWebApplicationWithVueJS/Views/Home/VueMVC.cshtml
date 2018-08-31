@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "Vue with MVC";
+}
+
+<div style="padding:10px" id="vue">
+    <span>名稱: </span>
+    <input type="text" v-model='Model.Name' />
+    <span style="color:red;font-weight:bold" v-if="Validation.Name!=''">{{Validation.Name}}</span>
+    <br>
+    <span>編號: </span>
+    <input type="text" v-model='Model.Number' />
+    <span style="color:red;font-weight:bold" v-if="Validation.Number!=''">{{Validation.Number}}</span>
+    <br>
+    <button v-on:click="v_Submit">Search</button>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#vue',
+        data: {
+            Model: @Html.Raw(Json.Encode(ViewBag.Object)), //ViewModel Data
+            Validation: {} //Back End Validation Data(ViewModel)
+        },
+        methods: {
+            v_Submit: function (event) {
+                $.ajax({
+                    data: app.Model,
+                    url: '/Home/Search',
+                    type: 'POST',
+                    success: function (data) {
+                        AjaxValidation(data, app); //呼叫外部方法
+                    }
+                });
+            }
+        },
+    });
+
+    //外部呼叫
+    function AjaxValidation(data, VueObj) {
+        VueObj.Validation = {}; //Clear Validation
+        var response = JSON.parse(data);
+        //console.log(response.constructor === Array);
+        if (response.constructor === Array) {
+            //console.log(response);
+            for (var i = 0; i < response.length; i++) {
+                //console.log(response[i]);
+                Vue.set(VueObj.Validation, response[i].Key, response[i].Value[0])
+            }
+        }
+    };
+
+</script>

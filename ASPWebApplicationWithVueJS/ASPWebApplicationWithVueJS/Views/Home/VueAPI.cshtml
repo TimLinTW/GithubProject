@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "Vue with API";
+}
+
+<div style="padding:10px" id="vue">
+    <span>名稱: </span>
+    <input type="text" v-model='Model.Name' />
+    <span style="color:red;font-weight:bold" v-if="Validation.Name!=''">{{Validation.Name}}</span>
+    <br>
+    <span>編號: </span>
+    <input type="text" v-model='Model.Number' />
+    <span style="color:red;font-weight:bold" v-if="Validation.Number!=''">{{Validation.Number}}</span>
+    <br>
+    <button v-on:click="v_Submit">Search</button>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#vue',
+        data: {
+            Model: {}, //ViewModel Data
+            Validation: {} //Back End Validation Data(ViewModel)
+        },
+        created: function () {
+            fetch('/Api/ApiHome/Get', { method: 'get' })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data)
+                    this.Model = data;
+                }).catch(function (err) {
+                    console.log(err)
+                })
+        },
+        methods: {
+            v_Submit: function (event) {
+                fetch('/Api/ApiHome/Post', {
+                    method: 'POST', // or 'PUT'
+                    body: JSON.stringify(this.Model), // data can be `string` or {object}!
+                    headers: new Headers({
+                        'Content-Type': 'application/json'
+                    })
+                }).then(res => res.json())
+                    .catch(error => console.error('Error:', error))
+                    //.then(response => console.log('Success:', response));
+                    .then(function (response) {
+                        if (response) {
+                            app.v_Valid(response);
+                        }
+                    })
+            },
+            v_Valid: function (data) {
+                this.Validation = {}; //Clear Validation
+                var response = JSON.parse(data.Message);
+                console.log(response);
+                if (response.constructor === Array) {
+                    //console.log(response);
+                    for (var i = 0; i < response.length; i++) {
+                        //console.log(response[i]);
+                        Vue.set(this.Validation, response[i].Key.split(".")[1], response[i].Value[0])
+                    }
+                }
+            }
+        },
+    });
+
+</script>
