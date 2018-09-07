@@ -8,12 +8,12 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/home/:default/:helloworld',
+      path: '/world',
       name: 'HelloWorld',
       component: HelloWorld
     },
     {
-      path: '/home/:demo/:hellovue',
+      path: '/vue',
       name: 'HelloVue',
       component: HelloVue
     }
