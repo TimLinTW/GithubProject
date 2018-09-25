@@ -1,12 +1,15 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <img src="./assets/logo.png" />
       <ul>
         <li>
           <router-link to="/world">HelloWorld</router-link>
         </li>
         <li>
           <router-link to="/vue">HelloVue</router-link>
+        </li>
+        <li>
+          <router-link to="/card">ChartCard</router-link>
         </li>
       </ul>
     <router-view/>
