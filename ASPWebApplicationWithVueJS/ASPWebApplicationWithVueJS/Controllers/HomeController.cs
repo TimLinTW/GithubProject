@@ -51,7 +51,7 @@ namespace ASPWebApplicationWithVueJS.Controllers
 
         public ActionResult VueMVC()
         {
-            ViewBag.Message = "The Progressive JavaScript Framework";
+            ViewBag.Message = "The Progressive JavaScript Framework With Vue";
 
             var ViewModel = new EmpViewModel
             {
