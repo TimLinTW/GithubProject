@@ -13,6 +13,7 @@ namespace ASPWebApplicationWithVueJS.Controllers
     {
         public static ContentResult ErrorsToJsonResult(this ModelStateDictionary modelState)
         {
+            //若modelState.IsValid == false(沒過驗證)則組errors
             IEnumerable<KeyValuePair<string, string[]>> errors = modelState.IsValid
                 ? null
                 : modelState
