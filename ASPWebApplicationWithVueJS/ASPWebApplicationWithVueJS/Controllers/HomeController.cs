@@ -1,7 +1,9 @@
 ﻿using ASPWebApplicationWithVueJS.ViewModel;
+using Dapper;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -13,7 +15,6 @@ namespace ASPWebApplicationWithVueJS.Controllers
     {
         public static ContentResult ErrorsToJsonResult(this ModelStateDictionary modelState)
         {
-            //若modelState.IsValid == false(沒過驗證)則組errors
             IEnumerable<KeyValuePair<string, string[]>> errors = modelState.IsValid
                 ? null
                 : modelState
@@ -52,7 +53,7 @@ namespace ASPWebApplicationWithVueJS.Controllers
 
         public ActionResult VueMVC()
         {
-            ViewBag.Message = "The Progressive JavaScript Framework With Vue";
+            ViewBag.Message = "The Progressive JavaScript Framework";
 
             var ViewModel = new EmpViewModel
             {
@@ -69,22 +70,35 @@ namespace ASPWebApplicationWithVueJS.Controllers
             return View();
         }
 
-        [HttpPost]
-        public JsonResult Search(EmpViewModel obj)
+
+        public ActionResult Search(EmpViewModel obj)
         {
-            var Data = ModelState;
-            if (ModelState.IsValid)
+            var response = new List<Customers>();
+            
+            //get all Customers from local . northwind DB
+            using (var conn = new SqlConnection("Data Source=.;Integrated Security=SSPI;Initial Catalog=NORTHWND;"))
             {
-                var response = ModelState.ErrorsToJsonResult();
-
-                return Json(response.Content, JsonRequestBehavior.AllowGet);
+                var customers = conn.Query<Customers>("select * from Customers").ToList();
+                response = customers;
             }
-            else
-            {
-                var response = ModelState.ErrorsToJsonResult();
 
-                return Json(response.Content, JsonRequestBehavior.AllowGet);
-            }
+            ViewBag.Object = response;
+
+            return View();
+
+            //var Data = ModelState;
+            //if (ModelState.IsValid)
+            //{
+            //    var response = ModelState.ErrorsToJsonResult();
+
+            //    return Json(response.Content, JsonRequestBehavior.AllowGet);
+            //}
+            //else
+            //{
+            //    var response = ModelState.ErrorsToJsonResult();
+
+            //    return Json(response.Content, JsonRequestBehavior.AllowGet);
+            //}
         }
 
         public ActionResult VueAPI()

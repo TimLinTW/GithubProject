@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewBag.Title = "Search";
+}
+
+<h2>Search</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="span5" id="vTable">
+            <table class="table table-striped table-condensed">
+                <thead>
+                    <tr>
+                        <td v-for="n in propertyName">{{ n }}</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in model">
+                        <td>{{item.CustomerID}}</td>
+                        <td>{{item.CompanyName}}</td>
+                        <td>{{item.ContactName}}</td>
+                        <td>{{item.ContactTitle}}</td>
+                        <td>{{item.Address}}</td>
+                        <td>{{item.City}}</td>
+                        <td>{{item.Region}}</td>
+                        <td>{{item.PostalCode}}</td>
+                        <td>{{item.Country}}</td>
+                        <td>{{item.Phone}}</td>
+                        <td>{{item.Fax}}</td>
+                        @*<td>
+                            <span class="label label-success">Active</span>
+                        </td>*@
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var Data=@Html.Raw(Json.Encode(ViewBag.Object));
+
+    console.log(Data);
+
+    var DataObj = {
+        model: Data,
+        propertyName: Object.keys(Data[0]),
+        //language: [
+        //    { _exc: 30.34, _name: "USD" },
+        //    { _exc: 0.2692, _name: "JPY" },
+        //    { _exc: 38, _name: "GBP" },
+        //]
+    };
+
+    var app = new Vue({
+        el: '#vTable',
+        data: DataObj,
+        methods: {
+            vClick: function (event) {
+                alert(DataObj.inputDollar);
+            }
+        },
+    });
+</script>
