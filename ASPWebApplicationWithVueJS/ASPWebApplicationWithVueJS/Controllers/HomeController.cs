@@ -70,7 +70,6 @@ namespace ASPWebApplicationWithVueJS.Controllers
             return View();
         }
 
-
         public ActionResult Search()
         {
             var response = new List<Customers>();
@@ -85,6 +84,24 @@ namespace ASPWebApplicationWithVueJS.Controllers
             ViewBag.Object = response;
 
             return View();
+        }
+
+        [HttpPost]
+        public JsonResult Send(EmpViewModel obj)
+        {
+            var Data = ModelState;
+            if (ModelState.IsValid)
+            {
+                var response = ModelState.ErrorsToJsonResult();
+
+                return Json(response.Content, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var response = ModelState.ErrorsToJsonResult();
+
+                return Json(response.Content, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public ActionResult VueAPI()

@@ -25,7 +25,7 @@
             v_Submit: function (event) {
                 $.ajax({
                     data: app.Model,
-                    url: '/Home/Search',
+                    url: '/Home/Send',
                     type: 'POST',
                     success: function (data) {
                         AjaxValidation(data, app); //呼叫外部方法
